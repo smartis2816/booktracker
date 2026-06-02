@@ -11,7 +11,6 @@ import Spinner from '../../components/ui/Spinner'
 import StarRating from '../../components/ui/StarRating'
 import CoverEditModal from '../../components/CoverEditModal'
 
-// Конфиг статусов
 const STATUS_OPTIONS = [
   { value: 'want_to_read', label: 'Хочу прочитать' },
   { value: 'reading',      label: 'Читаю'           },
@@ -21,14 +20,10 @@ const STATUS_OPTIONS = [
 
 const STATUS_COLORS = {
   want_to_read: 'bg-gray-100 text-gray-600',
-  reading:      'bg-blue-100 text-blue-700',
+  reading:      'bg-[#E1F0E3] text-[#2D6B3F]',
   finished:     'bg-green-100 text-green-700',
   dropped:      'bg-red-100 text-red-600',
 }
-
-// ==========================================
-// ГЛАВНЫЙ КОМПОНЕНТ
-// ==========================================
 
 const BookPage = () => {
   const { id } = useParams()
@@ -171,7 +166,7 @@ const BookPage = () => {
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <svg className="w-12 h-12 text-gray-300" fill="none"
+                <svg className="w-12 h-12 text-[#D6E1D5]" fill="none"
                   stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                     d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -183,7 +178,7 @@ const BookPage = () => {
           {/* Кнопка обложки */}
           <button
             onClick={() => setIsCoverModalOpen(true)}
-            className="text-xs text-blue-600 hover:underline cursor-pointer"
+            className="text-xs text-[#2D6B3F] hover:underline cursor-pointer"
           >
             {coverUrl ? 'Изменить обложку' : 'Добавить обложку'}
           </button>
@@ -257,7 +252,7 @@ const BookPage = () => {
               className={`px-4 py-2.5 text-sm font-medium border-b-2
                 transition-colors duration-150
                 ${activeTab === tab.key
-                  ? 'border-blue-600 text-blue-600'
+                  ? 'border-[#2D6B3F] text-[#2D6B3F]'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
             >
@@ -320,10 +315,6 @@ const BookPage = () => {
   )
 }
 
-// ==========================================
-// ВСПОМОГАТЕЛЬНЫЕ КОМПОНЕНТЫ
-// ==========================================
-
 const StatusSelector = ({ status, onChange }) => (
   <div className="flex flex-col gap-1">
     <p className="text-sm font-medium text-gray-700">Статус</p>
@@ -363,7 +354,7 @@ const ProgressSection = ({ currentPage, totalPages, progressPercent, onUpdate })
       <p className="text-sm font-medium text-gray-700">Прогресс</p>
       <div className="w-full bg-gray-100 rounded-full h-2.5">
         <div
-          className="bg-blue-500 h-2.5 rounded-full transition-all duration-500"
+          className="bg-[#2D6B3F] h-2.5 rounded-full transition-all duration-500"
           style={{ width: `${progressPercent}%` }}
         />
       </div>
@@ -376,7 +367,7 @@ const ProgressSection = ({ currentPage, totalPages, progressPercent, onUpdate })
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSave()}
               autoFocus
-              className="w-20 px-2 py-1 border border-blue-400 rounded-lg
+              className="w-20 px-2 py-1 border border-[#2D6B3F] rounded-lg
                 text-sm outline-none text-center"
             />
             {totalPages && (
@@ -405,7 +396,7 @@ const ProgressSection = ({ currentPage, totalPages, progressPercent, onUpdate })
             <span className="text-sm text-gray-400">({progressPercent}%)</span>
             <button
               onClick={() => setEditing(true)}
-              className="text-blue-600 hover:text-blue-800 text-sm"
+              className="text-[#2D6B3F] hover:text-[#1E3322] text-sm"
             >
               Изменить
             </button>
@@ -435,7 +426,7 @@ const ReviewSection = ({ review, onSave }) => {
         {!editing && (
           <button
             onClick={() => setEditing(true)}
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-[#2D6B3F] hover:underline"
           >
             {review ? 'Редактировать' : 'Написать отзыв'}
           </button>
@@ -555,7 +546,7 @@ const NotesSection = ({ notes, loading, bookId, onAdd, onUpdate, onDelete }) => 
                     onChange={(e) => setEditText(e.target.value)}
                     rows={3}
                     autoFocus
-                    className="w-full px-3 py-2 border border-blue-400
+                    className="w-full px-3 py-2 border border-[#2D6B3F]
                       rounded-lg outline-none text-sm resize-none"
                   />
                   <div className="flex gap-2">
@@ -590,7 +581,7 @@ const NotesSection = ({ notes, loading, bookId, onAdd, onUpdate, onDelete }) => 
                           setEditingId(note.id)
                           setEditText(note.content)
                         }}
-                        className="text-xs text-blue-600 hover:underline"
+                        className="text-xs text-[#2D6B3F] hover:underline"
                       >
                         Изменить
                       </button>
@@ -681,7 +672,7 @@ const QuotesSection = ({ quotes, loading, bookId, onAdd, onDelete }) => {
         <div className="flex flex-col gap-3">
           {quotes.map((quote) => (
             <div key={quote.id}
-              className="border-l-4 border-blue-300 pl-4 py-2 flex
+              className="border-l-4 border-[#B7D0B9] pl-4 py-2 flex
                 flex-col gap-1">
               <p className="text-sm text-gray-700 leading-relaxed italic">
                 «{quote.content}»
@@ -707,10 +698,6 @@ const QuotesSection = ({ quotes, loading, bookId, onAdd, onDelete }) => {
     </div>
   )
 }
-
-// ==========================================
-// УТИЛИТЫ
-// ==========================================
 
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('ru-RU', {

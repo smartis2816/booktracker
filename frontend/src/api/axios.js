@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-// Базовый URL бэкенда.
-// Все запросы будут начинаться с этого адреса.
 const BASE_URL = 'http://127.0.0.1:8000/api'
 
 const api = axios.create({
@@ -10,10 +8,6 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 })
-
-// ==========================================
-// ИНТЕРЦЕПТОРЫ
-// ==========================================
 
 api.interceptors.request.use(
   (config) => {

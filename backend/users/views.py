@@ -13,13 +13,6 @@ User = get_user_model()
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_view(request):
-    """
-    Регистрация нового пользователя.
-
-    Принимает: { username, email, password, password_confirm }
-    Возвращает: { user: {...}, tokens: { access, refresh } }
-    """
-
     serializer = RegisterSerializer(data=request.data)
 
     if serializer.is_valid():
@@ -47,13 +40,6 @@ def register_view(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
-    """
-    Вход в систему.
-
-    Принимает: { username, password }
-    Возвращает: { user: {...}, tokens: { access, refresh } }
-    """
-
     username = request.data.get('username')
     password = request.data.get('password')
 
@@ -97,14 +83,6 @@ def login_view(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
-    """
-    Выход из системы.
-
-    @permission_classes([IsAuthenticated]) — только для авторизованных.
-    Принимает: { refresh }
-    Возвращает: сообщение об успехе
-    """
-
     refresh_token = request.data.get('refresh')
 
     if not refresh_token:
@@ -131,10 +109,6 @@ def logout_view(request):
 @api_view(['GET', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def me_view(request):
-    """
-    GET   — получить данные текущего пользователя
-    PATCH — обновить username или email
-    """
     if request.method == 'GET':
         serializer = UserSerializer(request.user)
         return Response(serializer.data)

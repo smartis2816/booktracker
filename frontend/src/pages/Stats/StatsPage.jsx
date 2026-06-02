@@ -10,13 +10,9 @@ import {
 } from 'recharts'
 
 const GENRE_COLORS = [
-  '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b',
-  '#10b981', '#ef4444', '#06b6d4', '#f97316',
+  '#2D6B3F', '#73966F', '#A9BE89', '#1E3322',
+  '#3B5440', '#6B7B6B', '#D9E8DC', '#BFD6C3',
 ]
-
-// ==========================================
-// ГЛАВНЫЙ КОМПОНЕНТ
-// ==========================================
 
 const StatsPage = () => {
   const [stats, setStats] = useState(null)
@@ -104,35 +100,31 @@ const StatsPage = () => {
   )
 }
 
-// ==========================================
-// СВОДНЫЕ ЦИФРЫ
-// ==========================================
-
 const SummarySection = ({ summary }) => {
   const cards = [
     {
       label: 'Всего книг',
       value: summary.total_books,
       icon: '📚',
-      color: 'bg-blue-50 border-blue-200',
+      color: 'bg-[#E1F0E3] border-[#B7D0B9]',
     },
     {
       label: 'Прочитано',
       value: summary.finished_books,
       icon: '✅',
-      color: 'bg-green-50 border-green-200',
+      color: 'bg-[#E1F0E3] border-[#B7D0B9]',
     },
     {
       label: 'Читаю сейчас',
       value: summary.reading_books,
       icon: '📖',
-      color: 'bg-yellow-50 border-yellow-200',
+      color: 'bg-[#EEF4ED] border-[#D6E1D5]',
     },
     {
       label: 'Страниц прочитано',
       value: summary.total_pages_read.toLocaleString('ru-RU'),
       icon: '📄',
-      color: 'bg-purple-50 border-purple-200',
+      color: 'bg-[#F3F7F2] border-[#D6E1D5]',
     },
     {
       label: 'Средняя оценка',
@@ -140,13 +132,13 @@ const SummarySection = ({ summary }) => {
         ? `${summary.average_rating} ★`
         : '—',
       icon: '⭐',
-      color: 'bg-orange-50 border-orange-200',
+      color: 'bg-[#EEF4ED] border-[#D6E1D5]',
     },
     {
       label: 'Хочу прочитать',
       value: summary.want_to_read_books,
       icon: '🔖',
-      color: 'bg-gray-50 border-gray-200',
+      color: 'bg-[#F7FAF6] border-[#D6E1D5]',
     },
   ]
 
@@ -167,10 +159,6 @@ const SummarySection = ({ summary }) => {
     </div>
   )
 }
-
-// ==========================================
-// ГРАФИК ПО МЕСЯЦАМ
-// ==========================================
 
 const MonthlyChart = ({ data }) => {
   const formattedData = data.map(item => ({
@@ -208,16 +196,12 @@ const MonthlyChart = ({ data }) => {
               fontSize: '13px',
             }}
           />
-          <Bar dataKey="pages" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="pages" fill="#2D6B3F" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
   )
 }
-
-// ==========================================
-// ГРАФИК ПО НЕДЕЛЯМ
-// ==========================================
 
 const WeeklyChart = ({ data }) => {
   const formattedData = data.map(item => ({
@@ -255,16 +239,12 @@ const WeeklyChart = ({ data }) => {
               fontSize: '13px',
             }}
           />
-          <Bar dataKey="pages" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="pages" fill="#73966F" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
   )
 }
-
-// ==========================================
-// ДИАГРАММА ЖАНРОВ
-// ==========================================
 
 const GenresChart = ({ genres }) => {
   const topGenres = genres.slice(0, 7)
@@ -321,10 +301,6 @@ const GenresChart = ({ genres }) => {
   )
 }
 
-// ==========================================
-// ТАБЛИЦА АВТОРОВ
-// ==========================================
-
 const AuthorsTable = ({ authors }) => (
   <div className="bg-white border border-gray-200 rounded-xl p-6">
     <h2 className="text-base font-semibold text-gray-900 mb-4">
@@ -358,10 +334,6 @@ const AuthorsTable = ({ authors }) => (
     </div>
   </div>
 )
-
-// ==========================================
-// КАЛЕНДАРЬ ЧТЕНИЯ
-// ==========================================
 
 const CalendarSection = ({ calendar }) => {
   const [hoveredDay, setHoveredDay] = useState(null)
@@ -495,10 +467,6 @@ const CalendarSection = ({ calendar }) => {
   )
 }
 
-// ==========================================
-// ПУСТОЕ СОСТОЯНИЕ
-// ==========================================
-
 const EmptyState = () => (
   <div className="py-20 flex flex-col items-center gap-4 text-center">
     <div className="w-16 h-16 bg-gray-100 rounded-full
@@ -520,10 +488,6 @@ const EmptyState = () => (
   </div>
 )
 
-// ==========================================
-// УТИЛИТЫ
-// ==========================================
-
 const getHeatLevel = (pages) => {
   if (pages === 0) return 0
   if (pages < 20)  return 1
@@ -534,13 +498,13 @@ const getHeatLevel = (pages) => {
 
 const getHeatColor = (level) => {
   const colors = {
-    0: 'bg-gray-100',
-    1: 'bg-blue-200',
-    2: 'bg-blue-400',
-    3: 'bg-blue-600',
-    4: 'bg-blue-800',
+    0: 'bg-[#F3F7F2]',
+    1: 'bg-[#DDEBDD]',
+    2: 'bg-[#B7D0B9]',
+    3: 'bg-[#2D6B3F]',
+    4: 'bg-[#1E3322]',
   }
-  return colors[level] || 'bg-gray-100'
+  return colors[level] || 'bg-[#F3F7F2]'
 }
 
 const isFirstDayOfMonth = (dateStr) => dateStr.endsWith('-01')

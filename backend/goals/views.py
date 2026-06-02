@@ -11,11 +11,6 @@ from .serializers import GoalSerializer
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def goals_view(request):
-    """
-    GET  - получить все цели текущего пользователя
-    POST - создать новую цель
-    """
-
     if request.method == 'GET':
         goals = Goal.objects.filter(user=request.user)
         serializer = GoalSerializer(
@@ -45,12 +40,6 @@ def goals_view(request):
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def goal_detail_view(request, pk):
-    """
-    GET: получить конкретную цель с актуальным прогрессом
-    PATCH: изменить цель (например, скорректировать target)
-    DELETE: удалить цель
-    """
-
     goal = get_object_or_404(Goal, pk=pk, user=request.user)
 
     if request.method == 'GET':

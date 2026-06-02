@@ -4,11 +4,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Author(models.Model):
-    """
-    Отдельная таблица авторов.
-    Поле unique=True гарантирует что один и тот же автор
-    не появится в базе дважды.
-    """
     name = models.CharField(
         max_length=500,
         unique=True,
@@ -25,9 +20,6 @@ class Author(models.Model):
 
 
 class Genre(models.Model):
-    """
-    Отдельная таблица жанров.
-    """
     name = models.CharField(
         max_length=255,
         unique=True,
@@ -44,11 +36,6 @@ class Genre(models.Model):
 
 
 class Book(models.Model):
-    """
-    Общий каталог книг.
-    authors и genres — связи многие-ко-многим.
-    Одна книга может иметь несколько авторов и несколько жанров.
-    """
     title = models.CharField(
         max_length=500,
         verbose_name='Название'
@@ -103,11 +90,6 @@ class Book(models.Model):
 
 
 class UserBook(models.Model):
-    """
-    Книга в библиотеке пользователя.
-    Центральная таблица — все заметки, цитаты и сессии
-    привязаны именно к ней, а не к user+book отдельно.
-    """
 
     STATUS_CHOICES = [
         ('want_to_read', 'Хочу прочитать'),
@@ -181,12 +163,7 @@ class UserBook(models.Model):
 
 
 class Note(models.Model):
-    """
-    Заметка привязана к UserBook.
-    Заметка может существовать только если
-    книга есть в библиотеке пользователя.
-    user и book доступны через user_book.user и user_book.book.
-    """
+    
     user_book = models.ForeignKey(
         UserBook,
         on_delete=models.CASCADE,
@@ -213,9 +190,6 @@ class Note(models.Model):
 
 
 class Quote(models.Model):
-    """
-    Цитата — аналогично заметке, привязана к UserBook.
-    """
     user_book = models.ForeignKey(
         UserBook,
         on_delete=models.CASCADE,
@@ -244,11 +218,6 @@ class Quote(models.Model):
 
 
 class ReadingSession(models.Model):
-    """
-    Сессия чтения привязана к UserBook.
-    Физически невозможно создать сессию для книги,
-    которой нет в библиотеке пользователя.
-    """
     user_book = models.ForeignKey(
         UserBook,
         on_delete=models.CASCADE,

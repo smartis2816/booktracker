@@ -138,23 +138,31 @@ const AddBookModal = ({ isOpen, onClose, onBookAdded }) => {
       <div className="flex gap-1 bg-gray-100 p-1 rounded-lg mb-4">
         <button
           onClick={() => setActiveTab(TABS.SEARCH)}
-          className={`flex-1 py-1.5 px-3 rounded-md text-sm font-medium
+          className={`flex-1 py-1.5 px-3 rounded-md text-sm font-bold
             transition-colors duration-150
             ${activeTab === TABS.SEARCH
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'
+              ? 'bg-white shadow-sm'
+              : 'hover:text-[#1E3322]'
             }`}
+          style={activeTab === TABS.SEARCH
+            ? { color: '#1E3322' }
+            : { color: '#6B7B6B' }
+          }
         >
           Поиск
         </button>
         <button
           onClick={() => setActiveTab(TABS.MANUAL)}
-          className={`flex-1 py-1.5 px-3 rounded-md text-sm font-medium
+          className={`flex-1 py-1.5 px-3 rounded-md text-sm font-bold
             transition-colors duration-150
-            ${activeTab === TABS.MANUAL
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'
+            ${activeTab === TABS.SEARCH
+              ? 'bg-white shadow-sm'
+              : 'hover:text-[#1E3322]'
             }`}
+          style={activeTab === TABS.SEARCH
+            ? { color: '#1E3322' }
+            : { color: '#6B7B6B' }
+          }
         >
           Вручную
         </button>
@@ -168,7 +176,7 @@ const AddBookModal = ({ isOpen, onClose, onBookAdded }) => {
         </div>
       )}
 
-      {/* ===== ВКЛАДКА ПОИСКА ===== */}
+      {/* Вкладка поиска */}
       {activeTab === TABS.SEARCH && (
         <div className="flex flex-col gap-4">
 
@@ -239,8 +247,11 @@ const AddBookModal = ({ isOpen, onClose, onBookAdded }) => {
                   <button
                     onClick={() => handleAddFromSearch(book)}
                     disabled={adding}
-                    className="flex-shrink-0 text-blue-600 hover:text-blue-800
-                      text-sm font-medium disabled:opacity-50"
+                    className="flex-shrink-0 text-sm font-bold disabled:opacity-50
+                      transition-colors duration-150"
+                    style={{ color: '#2D6B3F' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#1E3322')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#2D6B3F')}
                   >
                     Добавить
                   </button>
@@ -252,7 +263,7 @@ const AddBookModal = ({ isOpen, onClose, onBookAdded }) => {
         </div>
       )}
 
-      {/* ===== ВКЛАДКА РУЧНОГО ДОБАВЛЕНИЯ ===== */}
+      {/* Вкладка ручного добавления */}
       {activeTab === TABS.MANUAL && (
         <form onSubmit={handleManualSubmit} className="flex flex-col gap-3">
 

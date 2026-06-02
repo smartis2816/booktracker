@@ -4,12 +4,6 @@ from django.core.validators import MinValueValidator
 
 
 class Goal(models.Model):
-    """
-    Цель чтения пользователя на определённый период.
-    Фактический прогресс выполнения цели
-    вычисляется динамически при каждом запросе
-    на основе данных таблиц UserBook и ReadingSession.
-    """
 
     PERIOD_CHOICES = [
         ('year', 'Год'),

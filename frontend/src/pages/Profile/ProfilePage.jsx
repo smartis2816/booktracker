@@ -5,23 +5,23 @@ import {
   exportLibraryCSV, exportLibraryPDF,
   exportNotesCSV, exportNotesPDF,
 } from '../../api/books'
-import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
+import Button from '../../components/ui/Button'
 
 const ProfilePage = () => {
   const { user, loginUser } = useAuth()
 
   return (
     <div className="max-w-2xl flex flex-col gap-6">
-
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Профиль</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-4xl font-extrabold tracking-tight" style={{ color: 'var(--text)' }}>
+          Профиль
+        </h1>
+        <p className="text-sm mt-1.5" style={{ color: 'var(--muted)' }}>
           Управление аккаунтом и экспорт данных
         </p>
       </div>
 
-      {/* Секция профиля */}
       <ProfileSection user={user} onUpdated={(updatedUser) => {
         const tokens = {
           access:  localStorage.getItem('access_token'),
@@ -30,25 +30,19 @@ const ProfilePage = () => {
         loginUser(updatedUser, tokens)
       }} />
 
-      {/* Секция экспорта */}
       <ExportSection />
-
     </div>
   )
 }
 
-// ==========================================
-// СЕКЦИЯ ПРОФИЛЯ
-// ==========================================
-
 const ProfileSection = ({ user, onUpdated }) => {
-  const [editing, setEditing] = useState(false)
-  const [form, setForm] = useState({
+  const [editing, setEditing]       = useState(false)
+  const [form, setForm]             = useState({
     username: user?.username || '',
     email:    user?.email    || '',
   })
-  const [errors, setErrors]       = useState({})
-  const [saving, setSaving]       = useState(false)
+  const [errors, setErrors]         = useState({})
+  const [saving, setSaving]         = useState(false)
   const [serverError, setServerError] = useState('')
   const [successMsg, setSuccessMsg]   = useState('')
 
@@ -62,19 +56,10 @@ const ProfileSection = ({ user, onUpdated }) => {
     e.preventDefault()
     setServerError('')
     setSuccessMsg('')
-
     const newErrors = {}
-    if (!form.username.trim()) {
-      newErrors.username = 'Имя пользователя не может быть пустым'
-    }
-    if (form.email && !/\S+@\S+\.\S+/.test(form.email)) {
-      newErrors.email = 'Введите корректный email'
-    }
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
+    if (!form.username.trim()) newErrors.username = 'Имя пользователя не может быть пустым'
+    if (form.email && !/\S+@\S+\.\S+/.test(form.email)) newErrors.email = 'Некорректный email'
+    if (Object.keys(newErrors).length) { setErrors(newErrors); return }
     setSaving(true)
     try {
       const response = await updateMe(form)
@@ -82,20 +67,18 @@ const ProfileSection = ({ user, onUpdated }) => {
       setEditing(false)
       setSuccessMsg('Профиль успешно обновлён')
       setTimeout(() => setSuccessMsg(''), 3000)
-    } catch (error) {
-      const data = error.response?.data
+    } catch (err) {
+      const data = err.response?.data
       if (data && typeof data === 'object') {
         const fieldErrors = {}
-        Object.entries(data).forEach(([key, value]) => {
-          fieldErrors[key] = Array.isArray(value) ? value[0] : value
+        Object.entries(data).forEach(([k, v]) => {
+          fieldErrors[k] = Array.isArray(v) ? v[0] : v
         })
         setErrors(fieldErrors)
       } else {
         setServerError('Не удалось обновить профиль.')
       }
-    } finally {
-      setSaving(false)
-    }
+    } finally { setSaving(false) }
   }
 
   const handleCancel = () => {
@@ -116,119 +99,116 @@ const ProfileSection = ({ user, onUpdated }) => {
     : ''
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6">
-      <h2 className="text-base font-semibold text-gray-900 mb-4">
-        Данные аккаунта
-      </h2>
+    <div className="rounded-xl border border-[#D6E1D5] overflow-hidden">
 
-      {/* Аватар и базовая инфо */}
-      <div className="flex items-center gap-4 mb-6">
-        {/* Аватар — круг с инициалами */}
-        <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center
-          justify-center text-white text-xl font-bold flex-shrink-0">
+      {/* Шапка */}
+      <div
+        className="px-6 py-6 flex items-center gap-4 text-white"
+        style={{ background: 'var(--green-dark)' }}
+      >
+        <div
+          className="w-[72px] h-[72px] rounded-lg flex items-center justify-center
+            text-2xl font-extrabold flex-shrink-0"
+          style={{ background: 'var(--green)' }}
+        >
           {initials}
         </div>
         <div>
-          <p className="font-semibold text-gray-900 text-lg">
-            {user?.username}
+          <h2 className="text-2xl font-extrabold">{user?.username}</h2>
+          <p className="text-sm mt-0.5" style={{ color: '#D9E8DC' }}>
+            {user?.email || 'Email не указан'}
           </p>
-          <p className="text-sm text-gray-400">
-            В системе с {joinedDate}
-          </p>
+          {joinedDate && (
+            <p className="text-xs mt-1" style={{ color: '#BFD6C3' }}>
+              В системе с {joinedDate}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Сообщения */}
-      {successMsg && (
-        <div className="mb-4 p-3 bg-green-50 border border-green-200
-          rounded-lg text-green-700 text-sm">
-          {successMsg}
-        </div>
-      )}
-      {serverError && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200
-          rounded-lg text-red-600 text-sm">
-          {serverError}
-        </div>
-      )}
+      {/* Тело карточки */}
+      <div className="bg-white p-6">
 
-      {editing ? (
-        /* Форма редактирования */
-        <form onSubmit={handleSave} className="flex flex-col gap-4">
-          <Input
-            label="Имя пользователя"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            error={errors.username}
-            required
-          />
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="example@mail.com"
-            error={errors.email}
-          />
-          <div className="flex gap-2">
-            <Button type="submit" disabled={saving}>
-              {saving ? 'Сохранение...' : 'Сохранить'}
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleCancel}
-            >
-              Отмена
-            </Button>
+        {successMsg && (
+          <div
+            className="mb-4 p-3 rounded-lg text-sm border"
+            style={{
+              background: '#E1F0E3',
+              borderColor: '#B7D0B9',
+              color: '#1E3322',
+            }}
+          >
+            {successMsg}
           </div>
-        </form>
-      ) : (
-        <div className="flex flex-col gap-3">
-          <InfoRow label="Имя пользователя" value={user?.username} />
-          <InfoRow
-            label="Email"
-            value={user?.email || 'Не указан'}
-          />
-          <div className="pt-2">
-            <Button
-              variant="secondary"
-              onClick={() => setEditing(true)}
-            >
-              Редактировать профиль
-            </Button>
+        )}
+        {serverError && (
+          <div
+            className="mb-4 p-3 rounded-lg text-sm border"
+            style={{ background: '#fbe9e9', borderColor: '#f0c8c8', color: '#8a4242' }}
+          >
+            {serverError}
           </div>
-        </div>
-      )}
+        )}
+
+        {editing ? (
+          <form onSubmit={handleSave} className="flex flex-col gap-4">
+            <Input
+              label="Имя пользователя"
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              error={errors.username}
+              required
+            />
+            <Input
+              label="Email"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="example@mail.com"
+              error={errors.email}
+            />
+            <div className="flex gap-2">
+              <Button type="submit" disabled={saving}>
+                {saving ? 'Сохранение…' : 'Сохранить'}
+              </Button>
+              <Button type="button" variant="secondary" onClick={handleCancel}>
+                Отмена
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <InfoRow label="Имя пользователя" value={user?.username} />
+            <InfoRow label="Email" value={user?.email || 'Не указан'} />
+            <div className="pt-2">
+              <Button variant="secondary" onClick={() => setEditing(true)}>
+                Редактировать профиль
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
 const InfoRow = ({ label, value }) => (
-  <div className="flex items-center gap-3 py-2 border-b border-gray-100
-    last:border-0">
-    <span className="text-sm text-gray-500 w-40 flex-shrink-0">{label}</span>
-    <span className="text-sm text-gray-900">{value}</span>
+  <div
+    className="flex items-center gap-3 py-2.5 border-b last:border-0"
+    style={{ borderColor: '#D6E1D5' }}
+  >
+    <span className="text-sm w-44 flex-shrink-0" style={{ color: 'var(--muted)' }}>
+      {label}
+    </span>
+    <span className="text-sm" style={{ color: 'var(--text)' }}>{value}</span>
   </div>
 )
 
-// ==========================================
-// СЕКЦИЯ ЭКСПОРТА
-// ==========================================
-
 const ExportSection = () => {
-  const [formats, setFormats] = useState({
-    library: 'csv',
-    notes:   'csv',
-  })
-
-  const [loading, setLoading] = useState({
-    library: false,
-    notes:   false,
-  })
-
+  const [formats, setFormats] = useState({ library: 'csv', notes: 'csv' })
+  const [loading, setLoading] = useState({ library: false, notes: false })
   const [error, setError] = useState('')
 
   const EXPORT_CONFIG = {
@@ -236,32 +216,18 @@ const ExportSection = () => {
       label: 'Библиотека',
       desc:  'Список всех книг со статусами, оценками и прогрессом',
       icon:  '📚',
-      color: 'border-blue-200 bg-blue-50',
       options: {
-        csv: {
-          fn:       exportLibraryCSV,
-          filename: 'booktracker_library.csv',
-        },
-        pdf: {
-          fn:       exportLibraryPDF,
-          filename: 'booktracker_library.pdf',
-        },
+        csv: { fn: exportLibraryCSV, filename: 'booktracker_library.csv' },
+        pdf: { fn: exportLibraryPDF, filename: 'booktracker_library.pdf' },
       },
     },
     notes: {
       label: 'Заметки и цитаты',
       desc:  'Все заметки и цитаты с привязкой к книгам',
       icon:  '📝',
-      color: 'border-purple-200 bg-purple-50',
       options: {
-        csv: {
-          fn:       exportNotesCSV,
-          filename: 'booktracker_notes.csv',
-        },
-        pdf: {
-          fn:       exportNotesPDF,
-          filename: 'booktracker_notes.pdf',
-        },
+        csv: { fn: exportNotesCSV, filename: 'booktracker_notes.csv' },
+        pdf: { fn: exportNotesPDF, filename: 'booktracker_notes.pdf' },
       },
     },
   }
@@ -269,41 +235,38 @@ const ExportSection = () => {
   const handleExport = async (type) => {
     setError('')
     setLoading(prev => ({ ...prev, [type]: true }))
-
-    const format   = formats[type]
-    const config   = EXPORT_CONFIG[type].options[format]
-
+    const config = EXPORT_CONFIG[type].options[formats[type]]
     try {
       const response = await config.fn()
-
       const url  = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
-      link.href     = url
+      link.href = url
       link.download = config.filename
       document.body.appendChild(link)
       link.click()
       link.remove()
       window.URL.revokeObjectURL(url)
-
     } catch {
-      setError('Не удалось экспортировать данные. Попробуйте ещё раз.')
+      setError('Не удалось экспортировать данные.')
     } finally {
       setLoading(prev => ({ ...prev, [type]: false }))
     }
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6">
-      <h2 className="text-base font-semibold text-gray-900 mb-1">
+    <div className="bg-white border border-[#D6E1D5] rounded-xl p-6">
+      <h2 className="text-base font-extrabold mb-1" style={{ color: 'var(--text)' }}>
         Экспорт данных
       </h2>
-      <p className="text-sm text-gray-400 mb-4">
-        Скачайте свои данные в удобном формате
+      <p className="text-sm mb-5" style={{ color: 'var(--muted)' }}>
+        Скачайте данные в удобном формате. PDF подходит для архива, CSV — для таблиц.
       </p>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200
-          rounded-lg text-red-600 text-sm">
+        <div
+          className="mb-4 p-3 rounded-lg text-sm border"
+          style={{ background: '#fbe9e9', borderColor: '#f0c8c8', color: '#8a4242' }}
+        >
           {error}
         </div>
       )}
@@ -312,58 +275,57 @@ const ExportSection = () => {
         {Object.entries(EXPORT_CONFIG).map(([type, config]) => (
           <div
             key={type}
-            className={`p-4 border rounded-xl ${config.color}`}
+            className="p-4 rounded-xl border"
+            style={{
+              background: '#F3F7F2',
+              borderColor: '#D6E1D5',
+            }}
           >
-            {/* Верхняя строка: иконка + описание */}
+            {/* Описание */}
             <div className="flex items-start gap-3 mb-3">
               <span className="text-2xl">{config.icon}</span>
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-bold" style={{ color: 'var(--text)' }}>
                   {config.label}
                 </p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
                   {config.desc}
                 </p>
               </div>
             </div>
 
-            {/* Нижняя строка: выбор формата + кнопка */}
+            {/* Переключатель + кнопка */}
             <div className="flex items-center justify-between gap-3">
-
-              {/* Переключатель формата */}
-              <div className="flex gap-1 bg-white border border-gray-200
-                rounded-lg p-0.5">
+              <div
+                className="flex gap-1 p-0.5 rounded-md border"
+                style={{ background: '#fff', borderColor: '#D6E1D5' }}
+              >
                 {['csv', 'pdf'].map((fmt) => (
                   <button
                     key={fmt}
-                    onClick={() => setFormats(prev =>
-                      ({ ...prev, [type]: fmt })
-                    )}
-                    className={`px-3 py-1 rounded-md text-xs font-medium
-                      uppercase tracking-wide transition-colors duration-150
-                      ${formats[type] === fmt
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
-                      }`}
+                    onClick={() => setFormats(prev => ({ ...prev, [type]: fmt }))}
+                    className="px-3 py-1 rounded text-xs font-extrabold uppercase
+                      tracking-wide transition-colors duration-150"
+                    style={formats[type] === fmt
+                      ? { background: 'var(--green)', color: '#fff' }
+                      : { color: 'var(--muted)' }
+                    }
                   >
                     {fmt}
                   </button>
                 ))}
               </div>
 
-              {/* Кнопка скачивания */}
               <Button
                 variant="secondary"
                 disabled={loading[type]}
                 onClick={() => handleExport(type)}
-                className="flex-shrink-0"
               >
                 {loading[type]
-                  ? 'Загрузка...'
+                  ? 'Загрузка…'
                   : `Скачать ${formats[type].toUpperCase()}`
                 }
               </Button>
-
             </div>
           </div>
         ))}
@@ -371,6 +333,5 @@ const ExportSection = () => {
     </div>
   )
 }
-
 
 export default ProfilePage

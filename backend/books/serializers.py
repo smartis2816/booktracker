@@ -15,12 +15,6 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор книги.
-    authors и genres — вложенные объекты для чтения.
-    При создании книги авторы и жанры передаются
-    и обрабатываются в view.
-    """
     authors = AuthorSerializer(many=True, read_only=True)
     genres = GenreSerializer(many=True, read_only=True)
 
@@ -72,11 +66,6 @@ class UserBookSerializer(serializers.ModelSerializer):
 
 
 class NoteSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор заметки.
-    user_book устанавливается в view через save(user_book=...),
-    поэтому здесь его нет - пользователь его не передаёт.
-    """
     class Meta:
         model = Note
         fields = ('id', 'content', 'created_at', 'updated_at')

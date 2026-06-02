@@ -26,7 +26,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
       onClick={onClose}
     >
-      {/* Само окно — клик внутри не закрывает */}
+      {/* Окно: клик внутри не закрывает его */}
       <div
         className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
@@ -46,7 +46,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
           </button>
         </div>
 
-        {/* Содержимое модалки — скроллится если не влезает */}
+        {/* Содержимое модалки: можно скроллить, если не влезет */}
         <div className="overflow-y-auto flex-1 px-6 py-4">
           {children}
         </div>

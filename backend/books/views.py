@@ -21,19 +21,7 @@ from .serializers import (
 from .filters import UserBookFilter
 
 
-
-# ==========================================
-# ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ
-# ==========================================
-
 def get_or_create_book(book_data):
-    """
-    Вспомогательная функция для создания книги с авторами и жанрами.
-    Вынесена отдельно чтобы не дублировать код в разных view.
-
-    Принимает словарь с данными книги.
-    Возвращает объект Book.
-    """
     external_id = book_data.get('external_id') or book_data.get('google_books_id')
 
     if external_id:
@@ -66,17 +54,9 @@ def get_or_create_book(book_data):
 
     return book
 
-
-# ==========================================
-# ПОИСК КНИГ
-# ==========================================
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def search_books_view(request):
-    """
-    Поиск книг через Open Library API.
-    """
     query = request.query_params.get('q', '')
 
     if not query:
@@ -125,18 +105,9 @@ def search_books_view(request):
 
     return Response(books)
 
-
-# ==========================================
-# БИБЛИОТЕКА ПОЛЬЗОВАТЕЛЯ
-# ==========================================
-
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def user_books_view(request):
-    """
-    GET  — список книг в библиотеке с фильтрацией
-    POST — добавить книгу в библиотеку
-    """
 
     if request.method == 'GET':
         queryset = UserBook.objects.filter(
@@ -225,18 +196,9 @@ def user_book_detail_view(request, pk):
         user_book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-# ==========================================
-# ЗАМЕТКИ
-# ==========================================
-
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def notes_view(request, book_pk):
-    """
-    book_pk — pk записи UserBook.
-    Заметки теперь просто фильтруются по user_book.
-    """
     user_book = get_object_or_404(UserBook, pk=book_pk, user=request.user)
 
     if request.method == 'GET':
@@ -269,11 +231,6 @@ def note_detail_view(request, book_pk, pk):
         note.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-# ==========================================
-# ЦИТАТЫ
-# ==========================================
-
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def quotes_view(request, book_pk):
@@ -304,21 +261,9 @@ def quote_detail_view(request, book_pk, pk):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_cover_view(request, pk):
-    """
-    Обновление обложки книги.
-    Поддерживает два способа:
-
-    1. По URL
-    2. Загрузка файла
-
-    pk - id записи UserBook.
-    Меняем обложку в таблице Book, а не UserBook,
-    потому что обложка относится к книге, а не к читателю.
-    """
     user_book = get_object_or_404(UserBook, pk=pk, user=request.user)
     book = user_book.book
 
-    # СПОСОБ 1: обновление по URL
     cover_url = request.data.get('cover_url')
     if cover_url:
         book.cover_url = cover_url
@@ -328,7 +273,6 @@ def upload_cover_view(request, pk):
             status=status.HTTP_200_OK
         )
 
-    # СПОСОБ 2: загрузка файла
     cover_file = request.FILES.get('cover')
     if cover_file:
 
@@ -382,16 +326,7 @@ def upload_cover_view(request, pk):
         status=status.HTTP_400_BAD_REQUEST
     )
 
-# ==========================================
-# ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ PDF
-# ==========================================
-
 def get_pdf_font():
-    """
-    Регистрирует шрифт DejaVu с поддержкой кириллицы и возвращает его имя.
-    Если шрифт уже зарегистрирован — не регистрирует повторно.
-    Если файл шрифта не найден — возвращает Helvetica (без кириллицы).
-    """
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
     from django.conf import settings as django_settings
@@ -421,10 +356,6 @@ def get_pdf_font():
 
 
 def create_pdf_styles(fn):
-    """
-    Создаёт набор стилей для PDF-документа.
-    fn — имя шрифта.
-    """
     from reportlab.lib.styles import ParagraphStyle
     from reportlab.lib import colors
 
@@ -457,17 +388,9 @@ def create_pdf_styles(fn):
         ),
     }
 
-
-# ==========================================
-# ЭКСПОРТ БИБЛИОТЕКИ
-# ==========================================
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def export_library_csv_view(request):
-    """
-    Экспорт библиотеки в CSV.
-    """
     user_books = UserBook.objects.filter(
         user=request.user
     ).select_related('book').prefetch_related('book__authors', 'book__genres')
@@ -516,9 +439,6 @@ def export_library_csv_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def export_library_pdf_view(request):
-    """
-    Экспорт библиотеки в PDF - таблица всех книг.
-    """
     from reportlab.lib.pagesizes import A4
     from reportlab.lib import colors
     from reportlab.platypus import (
@@ -616,17 +536,9 @@ def export_library_pdf_view(request):
     )
     return response
 
-
-# ==========================================
-# ЭКСПОРТ ЗАМЕТОК И ЦИТАТ
-# ==========================================
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def export_notes_csv_view(request):
-    """
-    Экспорт заметок и цитат в CSV.
-    """
     notes = Note.objects.filter(
         user_book__user=request.user
     ).select_related('user_book__book').order_by('user_book__book__title')
@@ -670,9 +582,6 @@ def export_notes_csv_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def export_notes_pdf_view(request):
-    """
-    Экспорт заметок и цитат в PDF.
-    """
     from reportlab.lib.pagesizes import A4
     from reportlab.platypus import (
         SimpleDocTemplate, Paragraph, Spacer

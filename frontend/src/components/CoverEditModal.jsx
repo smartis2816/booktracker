@@ -185,8 +185,7 @@ const CoverEditModal = ({ isOpen, onClose, bookId, currentCover, onUpdated }) =>
         </div>
       )}
 
-      {/* ===== ВКЛАДКА ФАЙЛА ===== */}
-      {activeTab === 'file' && (
+       {activeTab === 'file' && (
         <div className="flex flex-col gap-4">
 
           {/* Скрытый input для выбора файла */}

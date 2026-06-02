@@ -4,10 +4,6 @@ import Button from '../../components/ui/Button'
 import Spinner from '../../components/ui/Spinner'
 import Modal from '../../components/ui/Modal'
 
-// ==========================================
-// ВСПОМОГАТЕЛЬНЫЕ ДАННЫЕ
-// ==========================================
-
 const PERIOD_OPTIONS = [
   { value: 'year',  label: 'Год'   },
   { value: 'month', label: 'Месяц' },
@@ -25,10 +21,6 @@ const EMPTY_FORM = {
   period_start: '',
   period_end:   '',
 }
-
-// ==========================================
-// ГЛАВНЫЙ КОМПОНЕНТ
-// ==========================================
 
 const GoalsPage = () => {
   const [goals, setGoals] = useState([])
@@ -126,10 +118,6 @@ const GoalsPage = () => {
   )
 }
 
-// ==========================================
-// КАРТОЧКА ЦЕЛИ
-// ==========================================
-
 const GoalCard = ({ goal, onEdit, onDelete }) => {
   const percent = goal.progress_percent
   const isCompleted = percent >= 100
@@ -142,7 +130,7 @@ const GoalCard = ({ goal, onEdit, onDelete }) => {
 
   return (
     <div className={`bg-white border rounded-xl p-5 flex flex-col gap-4
-      ${isCompleted ? 'border-green-300' : 'border-gray-200'}`}>
+      ${isCompleted ? 'border-[#B7D0B9]' : 'border-gray-200'}`}>
 
       {/* Шапка карточки */}
       <div className="flex items-start justify-between">
@@ -150,8 +138,8 @@ const GoalCard = ({ goal, onEdit, onDelete }) => {
           {/* Бейдж типа периода */}
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium
             ${goal.period_type === 'year'
-              ? 'bg-purple-100 text-purple-700'
-              : 'bg-blue-100 text-blue-700'
+              ? 'bg-[#E1F0E3] text-[#1E3322]'
+              : 'bg-[#E1F0E3] text-[#2D6B3F]'
             }`}>
             {periodLabel}
           </span>
@@ -165,17 +153,17 @@ const GoalCard = ({ goal, onEdit, onDelete }) => {
 
         {/* Процент выполнения */}
         <div className={`text-2xl font-bold
-          ${isCompleted ? 'text-green-600' : 'text-blue-600'}`}>
+          ${isCompleted ? 'text-green-600' : 'text-[#2D6B3F]'}`}>
           {percent}%
         </div>
       </div>
 
       {/* Прогресс-бар */}
       <div>
-        <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+        <div className="w-full bg-[#E2E9E1] rounded-full h-3 overflow-hidden">
           <div
             className={`h-3 rounded-full transition-all duration-700
-              ${isCompleted ? 'bg-green-500' : 'bg-blue-500'}`}
+              ${isCompleted ? 'bg-[#2D6B3F]' : 'bg-[#2D6B3F]'}`}
             style={{ width: `${Math.min(percent, 100)}%` }}
           />
         </div>
@@ -193,7 +181,7 @@ const GoalCard = ({ goal, onEdit, onDelete }) => {
       <div className="flex gap-2 pt-1 border-t border-gray-100">
         <button
           onClick={onEdit}
-          className="text-xs text-blue-600 hover:underline"
+          className="text-xs text-[#2D6B3F] hover:underline"
         >
           Изменить
         </button>
@@ -208,10 +196,6 @@ const GoalCard = ({ goal, onEdit, onDelete }) => {
     </div>
   )
 }
-
-// ==========================================
-// МОДАЛКА СОЗДАНИЯ / РЕДАКТИРОВАНИЯ
-// ==========================================
 
 const GoalModal = ({ isOpen, onClose, editingGoal, onSaved }) => {
   const isEditing = !!editingGoal
@@ -441,16 +425,22 @@ const GoalModal = ({ isOpen, onClose, editingGoal, onSaved }) => {
             <button
               type="button"
               onClick={() => handleQuickFill('this_year')}
-              className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200
-                rounded-lg text-gray-600 transition-colors"
+              className="text-xs px-3 py-1.5 rounded-md font-bold
+                transition-colors duration-150"
+              style={{ background: '#EEF4ED', color: 'var(--muted)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#D6E1D5')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = '#EEF4ED')}
             >
               Этот год
             </button>
             <button
               type="button"
               onClick={() => handleQuickFill('this_month')}
-              className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200
-                rounded-lg text-gray-600 transition-colors"
+              className="text-xs px-3 py-1.5 rounded-md font-bold
+                transition-colors duration-150"
+              style={{ background: '#EEF4ED', color: 'var(--muted)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#D6E1D5')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = '#EEF4ED')}
             >
               Этот месяц
             </button>
@@ -525,10 +515,6 @@ const GoalModal = ({ isOpen, onClose, editingGoal, onSaved }) => {
   )
 }
 
-// ==========================================
-// ПУСТОЕ СОСТОЯНИЕ
-// ==========================================
-
 const EmptyState = ({ onAdd }) => (
   <div className="py-20 flex flex-col items-center gap-4 text-center">
     <div className="w-16 h-16 bg-gray-100 rounded-full
@@ -548,10 +534,6 @@ const EmptyState = ({ onAdd }) => (
     <Button onClick={onAdd}>Поставить первую цель</Button>
   </div>
 )
-
-// ==========================================
-// УТИЛИТЫ
-// ==========================================
 
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('ru-RU', {
