@@ -4,6 +4,47 @@ import { useAuth } from '../../context/AuthContext'
 import { login } from '../../api/auth'
 import Input from '../../components/ui/Input'
 
+const LibraryIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="7" height="18" rx="1"/>
+    <rect x="14" y="3" width="7" height="18" rx="1"/>
+  </svg>
+)
+
+const GoalIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="9"/>
+    <circle cx="12" cy="12" r="4"/>
+    <line x1="12" y1="3" x2="12" y2="6"/>
+    <line x1="12" y1="18" x2="12" y2="21"/>
+    <line x1="3" y1="12" x2="6" y2="12"/>
+    <line x1="18" y1="12" x2="21" y2="12"/>
+  </svg>
+)
+
+const NoteIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+    <polyline points="14,2 14,8 20,8"/>
+    <line x1="8" y1="13" x2="16" y2="13"/>
+    <line x1="8" y1="17" x2="12" y2="17"/>
+  </svg>
+)
+
+const ChartIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="20" x2="18" y2="10"/>
+    <line x1="12" y1="20" x2="12" y2="4"/>
+    <line x1="6"  y1="20" x2="6"  y2="14"/>
+    <line x1="2"  y1="20" x2="22" y2="20"/>
+  </svg>
+)
+
+
 const LoginPage = () => {
   const navigate = useNavigate()
   const { loginUser } = useAuth()
@@ -56,10 +97,10 @@ const LoginPage = () => {
             className="w-10 h-10 rounded-lg flex items-center justify-center"
             style={{ background: 'var(--green)' }}
           >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor"
-              strokeWidth={2.2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
             </svg>
           </div>
           <span className="text-2xl font-bold tracking-tight">BookTracker</span>
@@ -78,17 +119,17 @@ const LoginPage = () => {
         {/* Фичи */}
         <div className="flex flex-col gap-3 mt-2">
           {[
-            { icon: '📚', text: 'Ведите каталог своих книг и отслеживайте прогресс чтения' },
-            { icon: '🎯', text: 'Ставьте годовые и месячные цели чтения'           },
-            { icon: '📝', text: 'Сохраняйте заметки и цитаты к каждой книге'       },
-            { icon: '📊', text: 'Смотрите статистику по жанрам, авторам и неделям' },
+            { icon: <LibraryIcon />, text: 'Ведите личную библиотеку и отслеживайте прогресс' },
+            { icon: <GoalIcon />,    text: 'Ставьте годовые и месячные цели чтения'           },
+            { icon: <NoteIcon />,    text: 'Сохраняйте заметки и цитаты к каждой книге'       },
+            { icon: <ChartIcon />,   text: 'Смотрите статистику по жанрам, авторам и неделям' },
           ].map((item) => (
             <div
               key={item.text}
               className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium"
               style={{ background: '#263F2A', border: '1px solid #3B5440' }}
             >
-              <span className="text-lg flex-shrink-0">{item.icon}</span>
+              <span className="flex-shrink-0 opacity-80">{item.icon}</span>
               <span style={{ color: '#D9E8DC' }}>{item.text}</span>
             </div>
           ))}
